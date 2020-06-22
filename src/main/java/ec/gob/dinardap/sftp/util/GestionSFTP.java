@@ -47,8 +47,9 @@ public class GestionSFTP {
 
                     SftpATTRS attrs = null;
                     String currentDirectory = channelSftp.pwd();
-                    String dir = credenciales.getDirDestino().replace("/".concat(credenciales.getDirDestino().split("/")[credenciales.getDirDestino().split("/").length - 1]),"");
-                    dir = currentDirectory.concat("/").concat(dir);
+                    String dir = credenciales.getDirDestino().replace(credenciales.getDirDestino().split("/")[credenciales.getDirDestino().split("/").length - 1],"");
+                    //String dir = credenciales.getDirDestino().replace("/".concat(credenciales.getDirDestino().split("/")[credenciales.getDirDestino().split("/").length - 1]),"");
+                    //dir = currentDirectory.concat("/").concat(dir);
                     try {
                     	attrs = channelSftp.stat(dir);
                     } catch (Exception e) {
@@ -60,10 +61,14 @@ public class GestionSFTP {
                     } else {
                         System.out.println("Creating dir " + credenciales.getDirDestino().split("/")[credenciales.getDirDestino().split("/").length - 1]);
 
-                        String path = "";
+                        boolean flag = true;
+                        String path = "/";
                         channelSftp.cd("/");
                         for (String carpeta : dir.split("/")) {
-                            path = path + "/" + carpeta;
+                        	if(!flag)
+                        		path = path.concat(carpeta).concat("/");
+                        	else
+                        		flag = false;
                             try {
                                 channelSftp.mkdir(path);
                             } catch (Exception ee) {
